@@ -345,12 +345,12 @@ export class EditorView {
   destroy() {
     if (!this.docView) return
     destroyInput(this)
-    this.destroyPluginViews()
+  //  this.destroyPluginViews()
     if (this.mounted) {
       this.docView.update(this.state.doc, [], viewDecorations(this), this)
       this.dom.textContent = ""
     } else if (this.dom.parentNode) {
-      this.dom.parentNode.removeChild(this.dom)
+    //  this.dom.parentNode.removeChild(this.dom)
     }
     this.docView.destroy()
     this.docView = null
