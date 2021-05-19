@@ -342,16 +342,20 @@ export class EditorView {
   // :: ()
   // Removes the editor from the DOM and destroys all [node
   // views](#view.NodeView).
-  destroy() {
+  destroy(keep_nodes) {
     if (!this.docView) return
     destroyInput(this)
-  //  this.destroyPluginViews()
+	    if(!keep_nodes) 
+	    {
+		    this.destroyPluginViews()
     if (this.mounted) {
       this.docView.update(this.state.doc, [], viewDecorations(this), this)
       this.dom.textContent = ""
     } else if (this.dom.parentNode) {
-    //  this.dom.parentNode.removeChild(this.dom)
+
+      this.dom.parentNode.removeChild(this.dom)
     }
+	    }
     this.docView.destroy()
     this.docView = null
   }
