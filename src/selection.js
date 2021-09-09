@@ -20,6 +20,17 @@ export function selectionFromDOM(view, origin) {
     }
   } else {
     let anchor = view.docView.posFromDOM(domSel.anchorNode, domSel.anchorOffset)
+    if (domSel.rangeCount >1){
+        let contiguous=true
+        for (let i =0; i< domSel.rangeCount-1;i++){
+           if( view.posAtDOM(domSel.getRangeAt(i+1).startContainer) != view.posAtDOM(domSel.getRangeAt(i).endContainer)) {
+              contiguous=false
+              break
+           }
+        }
+	if (contiguous) anchor = view.state.selection.$anchor.pos // assume it hasn't changed
+    }
+
     if (anchor < 0) return null
     $anchor = doc.resolve(anchor)
   }
