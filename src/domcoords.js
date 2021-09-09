@@ -250,7 +250,10 @@ export function posAtCoords(view, coords) {
     if (!elt) return null
   }
   // Safari's caretRangeFromPoint returns nonsense when on a draggable element
-  if (browser.safari && elt.draggable) node = offset = null
+  if (browser.safari) {
+    for (let p = elt; node && p; p = parentNode(p))
+      if (p.draggable) node = offset = null
+  }
   elt = targetKludge(elt, coords)
   if (node) {
     if (browser.gecko && node.nodeType == 1) {
@@ -348,7 +351,8 @@ export function coordsAtPos(view, pos, side) {
   }
   if (offset < nodeSize(node)) {
     let after = node.childNodes[offset]
-    let target = after.nodeType == 3 ? textRange(after, 0, (supportEmptyRange ? 0 : 1))
+    while (after.pmViewDesc && after.pmViewDesc.ignoreForCoords) after = after.nextSibling
+    let target = !after ? null : after.nodeType == 3 ? textRange(after, 0, (supportEmptyRange ? 0 : 1))
         : after.nodeType == 1 ? after : null
     if (target) return flattenV(singleRect(target, -1), true)
   }
@@ -402,7 +406,9 @@ function endOfTextblockVertical(view, state, dir) {
       else continue
       for (let i = 0; i < boxes.length; i++) {
         let box = boxes[i]
-        if (box.bottom > box.top && (dir == "up" ? box.bottom < coords.top + 1 : box.top > coords.bottom - 1))
+        if (box.bottom > box.top + 1 &&
+            (dir == "up" ? coords.top - box.top > (box.bottom - coords.top) * 2
+             : box.bottom - coords.bottom > (coords.bottom - box.top) * 2))
           return false
       }
     }
@@ -416,7 +422,7 @@ function endOfTextblockHorizontal(view, state, dir) {
   let {$head} = state.selection
   if (!$head.parent.isTextblock) return false
   let offset = $head.parentOffset, atStart = !offset, atEnd = offset == $head.parent.content.size
-  let sel = getSelection()
+  let sel = view.root.getSelection()
   // If the textblock is all LTR, or the browser doesn't support
   // Selection.modify (Edge), fall back to a primitive approach
   if (!maybeRTL.test($head.parent.textContent) || !sel.modify)

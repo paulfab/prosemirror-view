@@ -1,3 +1,95 @@
+## 1.20.1 (2021-09-09)
+
+### Bug fixes
+
+The library accidentally allowed node decorations on text nodes. It no longer does.
+
+Fix an issue on Chrome and Safari where coordinates for positions between uneditable nodes and the end of a textblock would return zero-height rectangles.
+
+Fix a bug where vertical `endOfTextblock` queries could inappropriately return true when a small line height is used.
+
+## 1.20.0 (2021-09-03)
+
+### New features
+
+It is now possible to pass plugins directly to the view with the `plugins` direct prop.
+
+## 1.19.3 (2021-08-20)
+
+### Bug fixes
+
+Fix an issue where generic styles for  elements could cause separator nodes created by the editor to impact layout.
+
+Fix an issue where moving to another tab and back could clear a node selection.
+
+## 1.19.2 (2021-08-19)
+
+### Bug fixes
+
+Avoid some bugs around drag-selecting by delaying synchronization between the DOM and the state selection until the end of the drag.
+
+## 1.19.1 (2021-08-16)
+
+### Bug fixes
+
+Fix another issue around copy-pasting table structure, causing inappropriate opening of copied cell selections.
+
+## 1.19.0 (2021-08-13)
+
+### Bug fixes
+
+Add a  DOM attribute to the content element to avoid automatic translation services from messing with the editable text.
+
+Fix a bug where copy-pasting table content sometimes carried along superfluous table markup.
+
+Fix issue where end-of-textblock detection didn't use the correct selection when in a shadow root.
+
+### New features
+
+The `DecorationSource` interface now exposes a `map` method. Add a translate=no attribute to the editor element by default
+
+## 1.18.11 (2021-07-22)
+
+### Bug fixes
+
+Work around an issue where Chrome and Safari will replace some spaces with non-breaking spaces when putting HTML on the clipboard.
+
+When pasting as plain text (shift-mod-v) apply the marks at the selection to the inserted content.
+
+Fix flaky behavior when starting a composition with a selection that spans multiple blocks.
+
+## 1.18.10 (2021-07-15)
+
+### Bug fixes
+
+Fix an issue where dragging from just outside a draggable node on Chrome would cause odd dragging behavior.
+
+## 1.18.9 (2021-07-11)
+
+### Bug fixes
+
+Fix a bug in the previous release where `handleClickOn` wasn't fired anymore for clicks with the middle or right mouse button.
+
+## 1.18.8 (2021-06-23)
+
+### Bug fixes
+
+Work around a Safari bug where it draws the cursor at the start of the line when it is after an uneditable node at the end of the line.
+
+Fix an issue where the DOM could get out of sync when editing decorated text.
+
+Work around an issue where Firefox draws the cursor on the wrong line when after a newline.
+
+Fix a bug where double-clicking with the left mouse button and then pressing another mouse button was treated as a triple click.
+
+## 1.18.7 (2021-05-20)
+
+### Bug fixes
+
+Fix a bug where clicking on a textblock that had a node-selected parent didn't set a cursor selection.
+
+Fix a bug that caused a workaround for a Chrome Android issue to not work correctly, leading to bad cursor placement after some types of text input.
+
 ## 1.18.6 (2021-05-17)
 
 ### Bug fixes

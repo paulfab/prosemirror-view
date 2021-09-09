@@ -65,8 +65,8 @@ class NodeType {
   }
 
   valid(node, span) {
-    let {index, offset} = node.content.findIndex(span.from)
-    return offset == span.from && offset + node.child(index).nodeSize == span.to
+    let {index, offset} = node.content.findIndex(span.from), child
+    return offset == span.from && !(child = node.child(index)).isText && offset + child.nodeSize == span.to
   }
 
   eq(other) {
@@ -418,6 +418,10 @@ export class DecorationSet {
 // An object that can [provide](#view.EditorProps.decorations)
 // decorations. Implemented by [`DecorationSet`](#view.DecorationSet),
 // and passed to [node views](#view.EditorProps.nodeViews).
+//
+//   map:: (Mapping, Node) → DecorationSource
+//   Map the set of decorations in response to a change in the
+//   document.
 
 const empty = new DecorationSet()
 
@@ -433,6 +437,13 @@ DecorationSet.removeOverlap = removeOverlap
 class DecorationGroup {
   constructor(members) {
     this.members = members
+  }
+
+  map(mapping, doc) {
+    const mappedDecos = this.members.map(
+      member => member.map(mapping, doc, noSpec)
+    )
+    return DecorationGroup.from(mappedDecos)
   }
 
   forChild(offset, child) {
@@ -600,7 +611,7 @@ function withoutNulls(array) {
 
 // : ([Decoration], Node, number) → DecorationSet
 // Build up a tree that corresponds to a set of decorations. `offset`
-// is a base offset that should be subtractet from the `from` and `to`
+// is a base offset that should be subtracted from the `from` and `to`
 // positions in the spans (so that we don't have to allocate new spans
 // for recursive calls).
 function buildTree(spans, node, offset, options) {
