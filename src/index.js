@@ -67,6 +67,12 @@ export class EditorView {
     this.dragging = null
 
     initInput(this)
+  let l = create_el("div","",[create_el("div","wrapper-editor",[])])
+	let cu = this.dom
+	this.dom.parentElement.replaceChild(l,this.dom)
+	this.dom=l
+	l.children[0].append(cu)
+
 
     this.prevDirectPlugins = []
     this.pluginViews = []
